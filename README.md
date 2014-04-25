@@ -20,6 +20,12 @@ If you're looking for a more robust solution with wider browser support see [Fin
 2. Render image preview
 3. Anything DOM related
 
+## Demo
+
+A very simple working demo: http://jsfiddle.net/haggen/xtqS2/1/
+
+Note that JSFiddle won't let the files be uploaded but the request works nonetheless.
+
 ## Usage
 
 ### The interface
