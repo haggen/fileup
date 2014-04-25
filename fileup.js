@@ -1,4 +1,4 @@
-// FileUp v1.0.0
+// FileUp v1.0.2
 // more on http://github.com/haggen/fileup
 ;(function(root) {
 
@@ -18,7 +18,7 @@
         action(index, iterable[index]);
       }
     }
-  };
+  }; 
 
   FileUp = function(options) {
     this.options = FileUp.options;
@@ -45,11 +45,11 @@
     // Upload enpoint
     endpoint: '',
 
-    // Header to be sent with each upload
+    // Global headers
     headers: {},
 
-    // Additional parameters to be sent with each upload
-    params: function() { return {}; },
+    // Global additional parameters
+    params: {},
 
     // File field name
     field: 'file',
@@ -59,26 +59,25 @@
     upload: function(index) {
       var item = this.items[index];
 
-      item.xhr = new XMLHttpRequest();
-      item.data = new FormData();
-
-      each(this.options.headers, proxy(this, function(key, value) {
-        item.xhr.setRequestHeader(key, value);
-      }));
-
       item.xhr.addEventListener('load', proxy(this, function(e) {
-        this.finish(index, 'done');
-        this.emit('load', item, e);
+        item.status = 'done';
+        this.emit('success', item, e);
       }));
 
       item.xhr.addEventListener('error', proxy(this, function(e) {
-        this.finish(index, 'failed');
+        item.status = 'failed';
         this.emit('error', item, e);
       }));
 
       item.xhr.addEventListener('abort', proxy(this, function(e) {
-        this.finish(index, 'aborted');
+        item.status = 'aborted';
         this.emit('abort', item, e);
+      }));
+
+      item.xhr.addEventListener('loadend', proxy(this, function(e) {
+        this.emit('done', item, e);
+        this.working -= 1;
+        this.work();
       }));
 
       item.xhr.upload.addEventListener('progress', proxy(this, function(e) {
@@ -87,7 +86,11 @@
 
       item.xhr.open('POST', this.options.endpoint, true);
 
-      each(this.options.params(item), proxy(this, function(key, value) {
+      each(this.options.headers, proxy(this, function(key, value) {
+        item.xhr.setRequestHeader(key, value);
+      }));
+
+      each(this.options.params, proxy(this, function(key, value) {
         item.data.append(key, value);
       }));
 
@@ -96,7 +99,6 @@
       item.xhr.send(item.data);
 
       item.status = 'uploading';
-
       this.emit('upload', item);
     },
 
@@ -127,17 +129,13 @@
       this.upload(index);
     },
 
-    finish: function(index, status) {
-      this.items[index].status = status;
-      this.working -= 1;
-      this.work();
-    },
-
     add: function(file) {
       var item = {
         file: file,
+        status: 'enqueued',
         index: this.items.length,
-        status: 'enqueued'
+        xhr: new XMLHttpRequest(),
+        data: new FormData(),
       };
 
       this.items.push(item);
