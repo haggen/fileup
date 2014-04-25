@@ -12,7 +12,7 @@ If you're looking for a more robust solution with wider browser support see [Fin
 
 1. Make the asynchronous request
 2. Manage the upload queue
-3. Notify listeners of each upload phase and progress
+3. Emit messages on each upload phase and progress
 
 ## What it won't do
 
@@ -46,26 +46,27 @@ The `endpoint` option is the only required key, the other options will be assume
 
 ### Options
 
-The possible options (with each default value) you can supply an uploader are:
+On instantiating the FileUp object you can supply one or more of the following options.
 
-| Key         | Type       | Default                     | Description                                                                 |
-|-------------|------------|-----------------------------|-----------------------------------------------------------------------------|
-| threshold   | `Number`   | `1`                         | Optional. Limit of simultaneously uploads.                                  |
-| endpoint    | `String`   | _Empty_                     | Required. Location to where the data will be posted.                        |
-| headers     | `Object`   | `{}`                        | Optional. Request headers.                                                  |
-| params      | `Function` | `function() { return {}; }` | Optional. Additional parameters will be set per item through this function. |
-| field       | `String`   | `file`                      | Optional. Name for file field.                                              |
+| Key         | Type       | Default | Description                                            |
+|-------------|------------|---------|--------------------------------------------------------|
+| threshold   | `Number`   | `1`     | Optional. Limit of simultaneous uploads.               |
+| endpoint    | `String`   | _Empty_ | Required. Location to where the file will be posted.   |
+| headers     | `Object`   | `{}`    | Optional. Additional request headers.                  |
+| params      | `Object`   | `{}`    | Optional. Additional request parameters.               |
+| field       | `String`   | `file`  | Optional. Name of the file field.                      |
 
 ### Events
 
-| Event      | Fired                          | Arguments                   |
-|------------|--------------------------------|-----------------------------|
-| load       | After upload is complete.      | `item`, `event`             |
-| error      | After upload has failed.       | `item`, `event`             |
-| abort      | After upload was aborted.      | `item`, `event`             |
-| progress   | Each upload progress.          | `item`, `event`             |
-| upload     | Right after the upload begins. | `item`                      |
-| add        | After file is added.           | `item`                      |
+| Event      | When                     | Arguments       |
+|------------|--------------------------|-----------------|
+| add        | A file is added.         | `item`          |
+| upload     | An upload begins.        | `item`          |
+| success    | An upload has succeeded. | `item`, `event` |
+| error      | An upload has failed.    | `item`, `event` |
+| abort      | An upload was aborted.   | `item`, `event` |
+| progress   | On upload progress.      | `item`, `event` |
+| done       | An upload ends.          | `item`, `event` |
 
 ## License
 
