@@ -4,9 +4,9 @@
 
 ## Browser support
 
-FileUp was made to work on browsers with support for [FormData]() and has been tested only on the newest versions of Chrome, Firefox, Safari and IE.
+FileUp was made to work on browsers with support for [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) and has been tested only on the newest versions of Chrome, Firefox, Safari and IE.
 
-If you're looking for a more robust solution with wider browser support see [FineUploader]().
+If you're looking for a more robust solution with wider browser support see [FineUploader](http://fineuploader.com).
 
 ## What it will do
 
@@ -69,7 +69,7 @@ The possible options (with each default value) you can supply an uploader are:
 
 ## License
 
-Licensed under [Creative Commons Attribution-ShareAlike 3.0 Unported]()
+Licensed under [Creative Commons ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/deed.en_US)
 
 ## Contributing
 
